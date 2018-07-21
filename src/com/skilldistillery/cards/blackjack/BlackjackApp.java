@@ -18,8 +18,7 @@ public class BlackjackApp {
 	public void run() {
 		// intro to game 
 		System.out.println("Welcome to Blackjack!");
-		System.out.println("The game is about to start");
-		System.out.println();
+		System.out.println("The game is about to start\n");
 
 		dk.shuffle();
 		dk.returnCards();
@@ -31,6 +30,17 @@ public class BlackjackApp {
 		// instantiate hands 
 		BlackjackHandDealer bjhd = new BlackjackHandDealer();
 		BlackjackHandPlayer bjhp = new BlackjackHandPlayer();
+		
+		// clear hands before new game 
+		bjhp.clearHand();
+		bjhd.clearHand();
+		
+		// check to make sure there are enough cards 
+		int deckSize = dk.checkDeckSize(); 
+		
+		if (deckSize < 15) {
+			run(); 
+		}
 
 		// loop for dealing 
 		do {
@@ -41,7 +51,7 @@ public class BlackjackApp {
 
 		} while (bjhd.getCardValue().size() < 2 && bjhp.getCardValue().size() < 2);
 		System.out.println(bjhp + "\n");
-		System.out.println(bjhd.showDealerFirstCard());
+		System.out.println(bjhd.showDealerFirstCard() + ", xxxxx of XXXXX");
 
 		// if anyone gets blackjack upon dealing 
 		if (bjhd.getHandValue() == 21) {
@@ -70,6 +80,11 @@ public class BlackjackApp {
 		} 
 		if (newCard.equalsIgnoreCase("n") || newCard.equalsIgnoreCase("no")) {
 			anotherCard = false;
+		}
+		else {
+			System.out.println("What'd you say? That's a suspicious response to the dealer. You "
+				+ "have been suspected of counting cards and have been removed from this game.");
+			System.exit(0);
 		}
 
 		// loop for player taking cards 
@@ -138,15 +153,18 @@ public class BlackjackApp {
 		int playerValue = bjhp.getHandValue(); 
 		
 		if (playerValue < 21 && playerValue > dealerValue) {
+			System.out.println("You had " + playerValue + " and the dealer had " + dealerValue);
 			System.out.println("YOU WIN!");
 			playAgain();
 		}
 		if (playerValue < 21 && playerValue < dealerValue) {
+			System.out.println("You had " + playerValue + " and the dealer had " + dealerValue);
 			System.out.println("The dealer wins.");
 			System.out.println("I'm not taking you to Vegas with me anytime soon.");
 			playAgain(); 
 		}
 		if (playerValue == dealerValue) {
+			System.out.println("You had " + playerValue + " and the dealer had " + dealerValue);
 			System.out.println("It's a push!");
 			playAgain();
 		}
@@ -156,7 +174,7 @@ public class BlackjackApp {
 	public void playAgain() {
 		String playAgain = "";
 
-		System.out.print("Would you like to play again? Y/N");
+		System.out.print("Would you like to play again? Y/N ");
 		playAgain = sc.next();
 		if (playAgain.equalsIgnoreCase("y") || playAgain.equalsIgnoreCase("yes")) {
 			dealing(); 

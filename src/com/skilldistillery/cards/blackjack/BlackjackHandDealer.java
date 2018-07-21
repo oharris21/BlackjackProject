@@ -8,7 +8,7 @@ import com.skilldistillery.cards.common.Card;
 public class BlackjackHandDealer extends Hand {
 	
 	public void BlackjackHand() {
-//		System.out.println("\n\n\n" + cd);
+		
 	}
 
 	@Override

@@ -28,7 +28,6 @@ public abstract class Hand {
 
 	// add cards to both hands
 	public void addCard(Card c) {
-//		System.out.println(c);
 		holdsCards.add(c);
 	}
 
@@ -49,7 +48,21 @@ public abstract class Hand {
 
 	@Override
 	public String toString() {
-		return "" + getCardValue() + getHandValue(); 
+//		return "" + getCardValue() + getHandValue(); 
+	StringBuilder cardBuilder = new StringBuilder();
+	for (int i = 0; i < holdsCards.size(); i++) {
+		cardBuilder.append(holdsCards.get(i)); 
+		cardBuilder.append(" "); 
 	}
+	cardBuilder.append("\t"); 
+	cardBuilder.append("Total value of hand: "); 
+	cardBuilder.append(getHandValue());
+	
+	
+	
+	return cardBuilder.toString(); 
+	}
+	
+	
 
 }
