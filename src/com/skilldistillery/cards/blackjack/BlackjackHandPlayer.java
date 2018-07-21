@@ -1,19 +1,10 @@
 package com.skilldistillery.cards.blackjack;
 
-import java.util.List;
-
-import com.skilldistillery.cards.common.Card;
-
-public class BlackjackHand extends Hand {
+public class BlackjackHandPlayer extends Hand{
 
 	public void BlackjackHand() {
-		// this will be the holder of the user's hand
+//		System.out.println("\n\n\n" + cd);
 	}
-
-//	public Card hitMe() {
-//		Card b = deckInstance.remove(0); 
-//		return b; 
-//	}
 
 	@Override
 	public int getHandValue() {

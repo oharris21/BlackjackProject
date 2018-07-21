@@ -45,17 +45,18 @@ public class Deck {
 		}
 
 		public List<Card> returnCards() {
-			System.out.println(deck);
 			return deck;
 		}
 
 		// removes a Card from the deck
 		public Card dealCard() {
 			Card c = deck.remove(0);
-			System.out.println("\n" + c);
 			return c; 
 			// this is returning a card off the top of the deck
 			// now to add it to a hand 
 		}
+		
+		
+		
 
 }

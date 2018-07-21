@@ -41,7 +41,8 @@ public class Card {
 	// toString which says rank + " of " + suit.
 	@Override
 	public String toString() {
-		return "Card [suit=" + suit + " of " + ", rank=" + rank + "]";
+//		return "Card [suit=" + suit + " of " + ", rank=" + rank + "]";
+		return rank.toString() + " of " + suit.toString(); 
 	}
 
 	// method getValue to return the card's numeric value.

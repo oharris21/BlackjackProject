@@ -7,36 +7,49 @@ import com.skilldistillery.cards.common.Card;
 import com.skilldistillery.cards.common.Deck;
 
 public abstract class Hand {
-	Deck dk = new Deck(); 
-	private List<Card> holdsCards = new ArrayList<Card>(); 
-	holdsCards.add(); 
-	// trying to add card returned from deck to hand 
 
+	private List<Card> holdsCards = new ArrayList<Card>();
+
+	// getters for both lists
+	public List<Card> getHoldsCards() {
+		return holdsCards;
+	}
 
 	public int getHandValue() {
 		// this will return the sum of the value of the hand
-		int a = 0;
-		return a;
+		int sum = 0; 
+		for (int i = 0; i < holdsCards.size(); i++) {
+			Card c = holdsCards.get(i); 
+			int value = c.getValue(); 
+			sum += value; 
+		}
+		return sum;
 	}
 
+	// add cards to both hands
 	public void addCard(Card c) {
-		c = dk.dealCard(); 
-		holdsCards.add(c); 
-		System.out.println(c);
+//		System.out.println(c);
+		holdsCards.add(c);
 	}
 
+	// clear both hands
 	public void clearHand() {
 		holdsCards.clear();
 	}
 
-	public List<Card> getCards() {
-		// returns the list of cards, not their value
+	// returns the list of cards, not their value for both hands
+	public List<Card> getCardValue() {
 		return holdsCards;
+	}
+	
+	public String showDealerFirstCard() {
+		Card c = holdsCards.get(0); 
+		return c.toString();
 	}
 
 	@Override
 	public String toString() {
-		return "Hand [getHandValue()=" + getHandValue() + ", getCards()=" + getCards() + "]";
+		return "" + getCardValue() + getHandValue(); 
 	}
 
 }
