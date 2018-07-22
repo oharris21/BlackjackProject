@@ -50,6 +50,7 @@ public abstract class Hand {
 	public String toString() {
 //		return "" + getCardValue() + getHandValue(); 
 	StringBuilder cardBuilder = new StringBuilder();
+	cardBuilder.append("Your hand:\t"); 
 	for (int i = 0; i < holdsCards.size(); i++) {
 		cardBuilder.append(holdsCards.get(i)); 
 		cardBuilder.append(" "); 

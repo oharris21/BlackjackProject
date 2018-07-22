@@ -51,7 +51,7 @@ public class BlackjackApp {
 
 		} while (bjhd.getCardValue().size() < 2 && bjhp.getCardValue().size() < 2);
 		System.out.println(bjhp + "\n");
-		System.out.println(bjhd.showDealerFirstCard() + ", xxxxx of XXXXX");
+		System.out.println("Dealer's hand:\t" + bjhd.showDealerFirstCard() + ", xxxxx of XXXXX");
 
 		// if anyone gets blackjack upon dealing 
 		if (bjhd.getHandValue() == 21) {
@@ -81,11 +81,11 @@ public class BlackjackApp {
 		if (newCard.equalsIgnoreCase("n") || newCard.equalsIgnoreCase("no")) {
 			anotherCard = false;
 		}
-		else {
-			System.out.println("What'd you say? That's a suspicious response to the dealer. You "
-				+ "have been suspected of counting cards and have been removed from this game.");
-			System.exit(0);
-		}
+//		else {
+//			System.out.println("What'd you say? That's a suspicious response to the dealer. You "
+//				+ "have been suspected of counting cards and have been removed from this game.");
+//			System.exit(0);
+//		}
 
 		// loop for player taking cards 
 		while (anotherCard == true) {
