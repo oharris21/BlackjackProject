@@ -23,6 +23,13 @@ public class BlackjackApp {
 		dk.shuffle();
 		dk.returnCards();
 		dealing();
+		
+		// check to make sure there are enough cards 
+		
+		int deckSize = dk.checkDeckSize(); 
+		if (deckSize < 15) {
+			dk = new Deck(); 
+		}
 
 	}
 
@@ -35,13 +42,6 @@ public class BlackjackApp {
 		bjhp.clearHand();
 		bjhd.clearHand();
 		
-		// check to make sure there are enough cards 
-		int deckSize = dk.checkDeckSize(); 
-		
-		if (deckSize < 15) {
-			run(); 
-		}
-
 		// loop for dealing 
 		do {
 			Card cd1 = dk.dealCard();
