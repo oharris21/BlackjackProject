@@ -1,11 +1,9 @@
 package com.skilldistillery.cards.blackjack;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.skilldistillery.cards.common.Card;
+import com.skilldistillery.cards.common.Rank;
 
-public class BlackjackHandDealer extends Hand {
+public class Dealer extends Hand {
 	
 	public void BlackjackHand() {
 		
@@ -13,20 +11,28 @@ public class BlackjackHandDealer extends Hand {
 
 	@Override
 	public int getHandValue() {
-		// logic for soft and hard aces
 		return super.getHandValue();
 	}
 
 	@Override
 	public void clearHand() {
-		// TODO Auto-generated method stub
 		super.clearHand();
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return super.toString();
+	}
+	
+	@Override
+	public Card softAce(Card c) {
+		if (c.getRank() == Rank.ACE && getHandValue() < 11) {
+			c.setValue(11);
+		}
+		else {
+			c.setValue(1);
+		}
+		return c; 
 	}
 
 }

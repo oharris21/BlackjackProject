@@ -1,18 +1,37 @@
 package com.skilldistillery.cards.common;
 
 public class Card {
-
-	// suit and rank, set below in constructor 
 	private Suit suit;
 	private Rank rank;
 
-	// constructor 
 	public Card(Suit suit, Rank rank) {
 		this.suit = suit;
 		this.rank = rank;
 	}
 
-	// hashCode and equals
+	public Suit getSuit() {
+		return suit;
+	}
+	
+	public Rank getRank() {
+		return rank;
+	}
+	
+	public int getValue() {
+		return rank.getValue();
+	}
+	
+	public void setValue(int value) {
+		rank.setValue(value);
+	}
+	
+	// rank + " of " + suit
+	@Override
+	public String toString() {
+//		return "Card [suit=" + suit + " of " + ", rank=" + rank + "]";
+		return rank.toString() + " of " + suit.toString(); 
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -37,26 +56,4 @@ public class Card {
 			return false;
 		return true;
 	}
-
-	// toString which says rank + " of " + suit.
-	@Override
-	public String toString() {
-//		return "Card [suit=" + suit + " of " + ", rank=" + rank + "]";
-		return rank.toString() + " of " + suit.toString(); 
-	}
-
-	// method getValue to return the card's numeric value.
-	public int getValue() {
-		return rank.getValue();
-	}
-
-	// getters for suit and rank 
-	public Suit getSuit() {
-		return suit;
-	}
-
-	public Rank getRank() {
-		return rank;
-	}
-
 }

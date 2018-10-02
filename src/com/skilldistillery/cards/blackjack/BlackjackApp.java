@@ -1,14 +1,18 @@
 package com.skilldistillery.cards.blackjack;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.skilldistillery.cards.common.BettingSystem;
 import com.skilldistillery.cards.common.Card;
 import com.skilldistillery.cards.common.Deck;
+import com.skilldistillery.cards.common.Rank;
 
 public class BlackjackApp {
 	Scanner sc = new Scanner(System.in);
 	Deck dk = new Deck();
+	BettingSystem bet = new BettingSystem();
+	Dealer dealer = new Dealer();
+	Player player = new Player();
 
 	public static void main(String[] args) throws Exception {
 		BlackjackApp a = new BlackjackApp();
@@ -19,58 +23,83 @@ public class BlackjackApp {
 		// intro to game 
 		System.out.println("Welcome to Blackjack!");
 		System.out.println("The game is about to start\n");
-
+		System.out.print("How much money are you starting with? ");
+		int start = sc.nextInt();
+		player.setTotal(start);
 		dk.shuffle();
 		dk.returnCards();
 		dealing();
-		
-		// check to make sure there are enough cards 
-		
+	}
+	
+	public void dealing() {
+		// check to make sure there are enough cards in the deck
 		int deckSize = dk.checkDeckSize(); 
 		if (deckSize < 15) {
 			dk = new Deck(); 
 		}
-
-	}
-
-	public void dealing() {
-		// instantiate hands 
-		BlackjackHandDealer bjhd = new BlackjackHandDealer();
-		BlackjackHandPlayer bjhp = new BlackjackHandPlayer();
 		
 		// clear hands before new game 
-		bjhp.clearHand();
-		bjhd.clearHand();
+		player.clearHand();
+		dealer.clearHand();
+		
+		// place bet 
+		if (player.getTotal() <= 0) {
+			System.out.println("You have no money to bet with. Please comeback with some money.");
+			System.exit(0);
+		} 
+		else {
+			player.setAmountBet(bet.placeBet());
+		}
+		
 		
 		// loop for dealing 
 		do {
 			Card cd1 = dk.dealCard();
 			Card cd2 = dk.dealCard();
-			bjhd.addCard(cd1);
-			bjhp.addCard(cd2);
+			dealer.addCard(cd1);
+			player.addCard(cd2);
 
-		} while (bjhd.getCardValue().size() < 2 && bjhp.getCardValue().size() < 2);
-		System.out.println(bjhp + "\n");
-		System.out.println("Dealer's hand:\t" + bjhd.showDealerFirstCard() + ", xxxxx of XXXXX");
+		} while (dealer.getCardValue().size() < 2 && player.getCardValue().size() < 2);
+		System.out.println("Your hand:\t" + player + "\n");
+		System.out.println("Dealer's hand:\t" + dealer.showDealerFirstCard() + ", xx of XX");
 
 		// if anyone gets blackjack upon dealing 
-		if (bjhd.getHandValue() == 21) {
+		if (dealer.getHandValue() == 21) {
 			System.out.println("BLACKJACK!");
 			System.out.println("The dealer wins");
+			bet.setUserWins(false);
+			player.setTotal(player.getTotal() - player.getAmountBet());
+			System.out.println("You lost $" + player.getAmountBet());
+			System.out.println("Your total is $" + player.getTotal());
 			playAgain();
 		}
-		if (bjhp.getHandValue() == 21) {
+		if (player.getHandValue() == 21) {
 			System.out.println("BLACKJACK!");
 			System.out.println("You win");
+			bet.setUserWins(true);
+			player.setTotal(player.getTotal() + player.getAmountBet());
+			System.out.println("You won $" + (player.getAmountBet() * 2));
+			System.out.println("Your total is $" + player.getTotal());
 			playAgain();
-		} else {
-			hitMe(bjhp, bjhd);
+		} 
+		if (dealer.getHoldsCards().contains(Rank.ACE)) {
+			for (Card c : dealer.getHoldsCards()) {
+				dealer.softAce(c); 
+			}
+		}
+		if (player.getHoldsCards().contains(Rank.ACE)) {
+			for (Card c : player.getHoldsCards()) {
+				player.softAce(c); 
+			}
+		}
+		else {
+			hitMe(player, dealer);
 		}
 
 	}
 
-	public void hitMe(BlackjackHandPlayer bjhp, BlackjackHandDealer bjhd) {
-		// taking cards 
+	// taking cards 
+	public void hitMe(Player player, Dealer dealer) {
 		boolean anotherCard = false;
 
 		System.out.print("\nDo you want another card? Y/N ");
@@ -81,26 +110,32 @@ public class BlackjackApp {
 		if (newCard.equalsIgnoreCase("n") || newCard.equalsIgnoreCase("no")) {
 			anotherCard = false;
 		}
-//		else {
-//			System.out.println("What'd you say? That's a suspicious response to the dealer. You "
-//				+ "have been suspected of counting cards and have been removed from this game.");
-//			System.exit(0);
-//		}
 
 		// loop for player taking cards 
 		while (anotherCard == true) {
 			Card cd1 = dk.dealCard();
-			bjhp.addCard(cd1);
-			System.out.println(bjhp + "\n");
+			if (cd1.getRank() == Rank.ACE) {
+				player.softAce(cd1); 
+			}
+			player.addCard(cd1);
+			System.out.println("Your hand:\t" + player + "\n");
 				// if player busts
-				if (bjhp.getHandValue() > 21) {
+				if (player.getHandValue() > 21) {
 					System.out.println("You busted, the dealer wins");
+					bet.setUserWins(false);
+					player.setTotal(player.getTotal() - player.getAmountBet());
+					System.out.println("You lost $" + player.getAmountBet());
+					System.out.println("Your total is $" + player.getTotal());
 					playAgain();
 				}
 				// if player gets blackjack
-				if (bjhp.getHandValue() == 21) {
+				if (player.getHandValue() == 21) {
 					System.out.println("BLACKJACK!");
+					bet.setUserWins(true);
 					System.out.println("You win");
+					player.setTotal(player.getTotal() + player.getAmountBet());
+					System.out.println("You won $" + (player.getAmountBet() * 2));
+					System.out.println("Your total is $" + player.getTotal());
 					playAgain();
 				}
 			System.out.print("\nDo you want another card? Y/N ");
@@ -115,7 +150,7 @@ public class BlackjackApp {
 		boolean dealerTakeCard = false; 
 		
 		// should the dealer take cards? 
-		if (bjhd.getHandValue() < 17) {
+		if (dealer.getHandValue() < 17) {
 			dealerTakeCard = true; 
 		}
 		else {
@@ -125,42 +160,60 @@ public class BlackjackApp {
 		// loop for the dealer taking cards 
 		while (dealerTakeCard = true) {
 			// if the dealer's hand is less that 17, hit
-			if (bjhd.getHandValue() < 17) {
+			if (dealer.getHandValue() < 17) {
 				System.out.println("\nThe dealer is taking another card...");
 				Card cd1 = dk.dealCard();
-				bjhd.addCard(cd1);
-				System.out.println(bjhd + "\n");
+				if (cd1.getRank() == Rank.ACE) {
+					dealer.softAce(cd1); 
+				}
+				dealer.addCard(cd1);
+				System.out.println("Dealer's hand:\t" + dealer + "\n");
 			}
 				// if the dealer busts
-				if (bjhd.getHandValue() > 21) {
+				if (dealer.getHandValue() > 21) {
 					System.out.println("The dealer busts, YOU WIN!");
+					bet.setUserWins(true);
+					player.setTotal(player.getTotal() + player.getAmountBet());
+					System.out.println("You won $" + (player.getAmountBet() * 2));
+					System.out.println("Your total is $" + player.getTotal());
 					playAgain();
 				}
 				// if the dealer gets blackjack
-				if (bjhd.getHandValue() == 21) {
+				if (dealer.getHandValue() == 21) {
 					System.out.println("BLACKJACK!");
 					System.out.println("The dealer wins.");
+					bet.setUserWins(false);
+					player.setTotal(player.getTotal() - player.getAmountBet());
+					System.out.println("You lost $" + player.getAmountBet());
+					System.out.println("Your total is $" + player.getTotal());
 					playAgain();
 				}
-			if (bjhd.getHandValue() == 17 || bjhd.getHandValue() > 17) {
+			if (dealer.getHandValue() == 17 || dealer.getHandValue() > 17) {
 				dealerTakeCard = false; 
 				break; 
 			}
 		}
 		
 		// if no one busts or gets blackjack 
-		int dealerValue = bjhd.getHandValue(); 
-		int playerValue = bjhp.getHandValue(); 
+		int dealerValue = dealer.getHandValue(); 
+		int playerValue = player.getHandValue(); 
 		
 		if (playerValue < 21 && playerValue > dealerValue) {
 			System.out.println("You had " + playerValue + " and the dealer had " + dealerValue);
 			System.out.println("YOU WIN!");
+			bet.setUserWins(true);
+			player.setTotal(player.getTotal() + player.getAmountBet());
+			System.out.println("You won $" + (player.getAmountBet() * 2));
+			System.out.println("Your total is $" + player.getTotal());
 			playAgain();
 		}
 		if (playerValue < 21 && playerValue < dealerValue) {
 			System.out.println("You had " + playerValue + " and the dealer had " + dealerValue);
 			System.out.println("The dealer wins.");
-			System.out.println("I'm not taking you to Vegas with me anytime soon.");
+			bet.setUserWins(false);
+			player.setTotal(player.getTotal() - player.getAmountBet());
+			System.out.println("You lost $" + player.getAmountBet());
+			System.out.println("Your total is $" + player.getTotal());
 			playAgain(); 
 		}
 		if (playerValue == dealerValue) {
@@ -168,12 +221,10 @@ public class BlackjackApp {
 			System.out.println("It's a push!");
 			playAgain();
 		}
-		
 	}
 
 	public void playAgain() {
 		String playAgain = "";
-
 		System.out.print("Would you like to play again? Y/N ");
 		playAgain = sc.next();
 		if (playAgain.equalsIgnoreCase("y") || playAgain.equalsIgnoreCase("yes")) {
@@ -184,5 +235,4 @@ public class BlackjackApp {
 			System.exit(0);
 		}
 	}
-
 }
